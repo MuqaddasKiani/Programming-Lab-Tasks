@@ -1,7 +1,18 @@
 #include <iostream>
 #include <iomanip>
-#include <cstring> // For strcpy
+#include <cstring> // strcpy
 using namespace std;
+
+// Function to display a welcome banner
+void displayWelcome() {
+    cout << "*************************************************" << endl;
+    cout << "*                                               *" << endl;
+    cout << "*           WELCOME TO DUNE DELIGHT             *" << endl;
+    cout << "*         EXQUISITE DINING EXPERIENCE           *" << endl;
+    cout << "*                                               *" << endl;
+    cout << "*************************************************" << endl;
+    cout << endl;
+}
 
 // Structure to store menu items
 struct MenuItem {
@@ -19,15 +30,18 @@ void displayMenu(MenuItem menu[], int size) {
 }
 
 // Function to calculate total with discount
-float calculateBill(MenuItem *menu, int *order, int orderSize, float discount) {
+float calculateBill(MenuItem *menu, int *order, int *quantity, int orderSize, float discount) {
     float total = 0;
     for (int i = 0; i < orderSize; i++) {
-        total += menu[order[i] - 1].price; // Accessing using pointer
+        total += menu[order[i] - 1].price * quantity[i]; // Multiply price by quantity
     }
     return total - (total * discount / 100);
 }
 
 int main() {
+    // Display welcome banner
+    displayWelcome();
+
     // Menus for Breakfast, Lunch, and Dinner
     MenuItem breakfastMenu[] = {
         {"Hummus", 5.99}, {"Shakshuka", 4.99}, {"Tea", 2.50}, {"Kunafa", 3.00}
@@ -44,7 +58,7 @@ int main() {
     int menuSize = 0;
     float discount = 0.0;
 
-    cout << "Welcome to the Restaurant Billing System\n";
+    cout << "Welcome and enjoy your day with good meal!\n";
     cout << "Select a category:\n";
     cout << "1. Breakfast (10% discount)\n";
     cout << "2. Lunch (15% discount)\n";
@@ -79,6 +93,7 @@ int main() {
 
     // Take the order
     int order[10]; // Array to store ordered item indices
+    int quantity[10]; // Array to store quantity of each item
     int itemCount = 0;
     char more = 'y';
     cout << "Enter the item numbers you want to order (Max 10 items):\n";
@@ -93,14 +108,16 @@ int main() {
             cout << "Invalid item number. Try again.\n";
             continue;
         }
+        cout << "Enter quantity: ";
+        cin >> quantity[itemCount];
         itemCount++;
         cout << "Do you want to order more? (y/n): ";
         cin >> more;
     }
 
     // Calculate and display the bill
-    float totalBill = calculateBill(selectedMenu, order, itemCount, discount);
-    cout << "----------------------------------------------\n";
+    float totalBill = calculateBill(selectedMenu, order, quantity, itemCount, discount);
+    cout << "---------------------------------------------------------\n";
     cout << "Total items ordered: " << itemCount << endl;
     cout << "Discount Applied: " << discount << "%\n";
     cout << "Final Bill Amount: $" << fixed << setprecision(2) << totalBill << endl;
@@ -108,3 +125,5 @@ int main() {
 
     return 0;
 }
+
+
